@@ -3,8 +3,6 @@ node_js:
 - 10
 - 11
 - 12
-after_success:
-  - if [ $TRAVIS_BRANCH = 'master' ]; npm run release; fi
 deploy:
   provider: npm
   email: dan.rumney@ahanapediatrics.com
