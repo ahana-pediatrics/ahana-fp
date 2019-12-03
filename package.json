@@ -16,7 +16,7 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
-    "test": "mocha  --opts test/mocha.opts"
+    "test": "nyc mocha  --opts test/mocha.opts"
   },
   "keywords": [
     "FP",
@@ -28,11 +28,16 @@
   "devDependencies": {
     "@types/chai": "^4.2.5",
     "@types/mocha": "^5.2.7",
+    "@types/sinon": "^7.5.1",
+    "@types/sinon-chai": "^3.2.3",
     "chai": "^4.2.0",
     "cz-conventional-changelog": "^3.0.2",
     "git-cz": "^3.3.0",
     "mocha": "^6.2.2",
-    "ts-node": "^8.5.2",
+    "nyc": "^14.1.1",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0",
+    "ts-node": "^8.5.4",
     "tslint": "^5.20.1",
     "typescript": "^3.7.2"
   },
@@ -46,5 +51,23 @@
   },
   "dependencies": {
     "standard-version": "^7.0.1"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html",
+      "lcov"
+    ],
+    "sourceMap": true,
+    "instrument": true
   }
 }
