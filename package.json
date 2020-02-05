@@ -32,7 +32,7 @@
     "@types/sinon-chai": "^3.2.3",
     "chai": "^4.2.0",
     "cz-conventional-changelog": "^3.0.2",
-    "git-cz": "^3.3.0",
+    "git-cz": "^4.3.1",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "sinon": "^7.5.0",
