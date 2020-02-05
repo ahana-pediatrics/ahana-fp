@@ -1,11 +1,13 @@
+type Builder<T, I = void> = (input: I) => T | Promise<T>;
+
 /**
  * Represents a value that is initialized in a lazy manner, i.e. not until it is needed
  */
 export class Lazy<T> {
-  private builder: () => T;
-  private value: T;
+  private builder: Builder<T>;
+  private value: T | Promise<T>;
 
-  private constructor(builder: () => T) {
+  private constructor(builder: Builder<T>) {
     this.builder = builder;
   }
 
@@ -16,16 +18,16 @@ export class Lazy<T> {
    * @param builder - the initializing function. Since this could be doing anything, it can have
    *                  side effects
    */
-  static create<T>(builder: () => T) {
+  static create<T>(builder: Builder<T>) {
     return new Lazy<T>(builder);
   }
 
   /**
    * Gets the value of the lazy object, initializing it, if necessary
    */
-  getValue(): T {
+  async getValue(): Promise<T> {
     if (typeof this.value === 'undefined') {
-      this.value = this.builder();
+      this.value = await this.builder();
     }
 
     return this.value;
@@ -40,7 +42,7 @@ export class Lazy<T> {
    * @param builder - the initializing function. Since this could be doing anything, it can have
    *                  side effects
    */
-  chain<S>(builder: (t: T) => S) {
-    return Lazy.create(() => builder(this.getValue()));
+  chain<S>(builder: Builder<S, T>) {
+    return Lazy.create(() => this.getValue().then(builder));
   }
 }

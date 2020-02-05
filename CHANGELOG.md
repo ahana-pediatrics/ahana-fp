@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/ohana-pediatrics/ahana-fp/compare/v2.1.0...v2.1.1) (2020-02-05)
+
+## [2.1.0](https://github.com/ohana-pediatrics/ahana-fp/compare/v2.0.1...v2.1.0) (2020-01-06)
+
+
+### Features
+
+* add `partial` and `partialRight` functions ([3759d2b](https://github.com/ohana-pediatrics/ahana-fp/commit/3759d2b0f7a624fd08abae7da3dcd3adbb70813d))
+
+### [2.0.1](https://github.com/ohana-pediatrics/ahana-fp/compare/v2.0.0...v2.0.1) (2019-12-06)
+
+
+### Bug Fixes
+
+* 🐛 correct the way that AsyncData provides an Optional ([6c94753](https://github.com/ohana-pediatrics/ahana-fp/commit/6c947531730298e8aa6a92e130d93133157f473d))
+
+## [2.0.0](https://github.com/ohana-pediatrics/ahana-fp/compare/v1.3.1...v2.0.0) (2019-12-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* Returns a `Promise<T>` instead of a `T` on `getValue`
+
+### improvement
+
+* make Lazy return Promises ([9b9b23d](https://github.com/ohana-pediatrics/ahana-fp/commit/9b9b23d8323b8115cf3ee93c68039744532c4616))
+
+### [1.3.1](https://github.com/ohana-pediatrics/ahana-fp/compare/v1.3.0...v1.3.1) (2019-12-03)
+
+
+### Bug Fixes
+
+* 🐛 ensure that Lazy is exported ([f1e3ce5](https://github.com/ohana-pediatrics/ahana-fp/commit/f1e3ce57b5a944d84c8355ca7a2c70f751f967e8))
+
 ## [1.3.0](https://github.com/ohana-pediatrics/ahana-fp/compare/v1.2.2...v1.3.0) (2019-12-03)
 
 

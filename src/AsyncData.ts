@@ -30,9 +30,10 @@ export class AsyncData<D, E = {}> {
     this.status = status;
     if (data) {
       this.internal = Either.right(data);
-    }
-    if (error) {
+    } else if (error) {
       this.internal = Either.left(error);
+    } else {
+      this.internal = Either.right(Optional.empty());
     }
   }
 
@@ -152,15 +153,18 @@ export class AsyncData<D, E = {}> {
    *
    */
   getOptional(): Optional<D> {
-    return this.internal.map(
-      () => Optional.empty<D>(),
-      d => Optional.of(d[0])
-    );
+    return this.status === RemoteDataStatus.Failure
+      ? Optional.empty<D>()
+      : this.status === RemoteDataStatus.Success
+      ? Optional.of(this.internal.getRight()[0])
+      : Optional.empty<D>();
   }
 
-  map<U>(
-    callbackfn: (value: D, index: number, array?: ReadonlyArray<D>) => U
-  ): AsyncData<U, E> {
+  /**
+   * Standard response for mapping this AsyncData to a new one
+   * when no data is loaded
+   */
+  private getNonLoadedResult<U>() {
     if (this.status === RemoteDataStatus.NotAsked) {
       return AsyncData.notAsked<U, E>();
     }
@@ -172,8 +176,15 @@ export class AsyncData<D, E = {}> {
     if (this.status === RemoteDataStatus.Failure) {
       return AsyncData.errored<U, E>(this.internal.getLeft());
     }
+  }
 
-    return AsyncData.loaded(this.internal.getRight().map(callbackfn));
+  map<U>(
+    callbackfn: (value: D, index: number, array?: ReadonlyArray<D>) => U
+  ): AsyncData<U, E> {
+    return (
+      this.getNonLoadedResult() ??
+      AsyncData.loaded(this.internal.getRight().map(callbackfn))
+    );
   }
 
   mapValue<U>(
@@ -185,19 +196,10 @@ export class AsyncData<D, E = {}> {
   filter(
     callbackfn: (value: D, index?: number, array?: ReadonlyArray<D>) => boolean
   ): AsyncData<D, E> {
-    if (this.status === RemoteDataStatus.NotAsked) {
-      return AsyncData.notAsked<D, E>();
-    }
-
-    if (this.status === RemoteDataStatus.Loading) {
-      return AsyncData.loading<D, E>();
-    }
-
-    if (this.status === RemoteDataStatus.Failure) {
-      return AsyncData.errored<D, E>(this.internal.getLeft());
-    }
-
-    return AsyncData.loaded(this.internal.getRight().filter(callbackfn));
+    return (
+      this.getNonLoadedResult() ??
+      AsyncData.loaded(this.internal.getRight().filter(callbackfn))
+    );
   }
 
   reduce<U>(
@@ -209,19 +211,12 @@ export class AsyncData<D, E = {}> {
     ) => U,
     initialValue: U
   ): AsyncData<U, E> {
-    if (this.status === RemoteDataStatus.NotAsked) {
-      return AsyncData.notAsked<U, E>();
-    }
-
-    if (this.status === RemoteDataStatus.Loading) {
-      return AsyncData.loading<U, E>();
-    }
-
-    if (this.status === RemoteDataStatus.Failure) {
-      return AsyncData.errored<U, E>(this.internal.getLeft());
-    }
-
-    return AsyncData.loaded<U, E>([this.internal.getRight().reduce<U>(callbackfn, initialValue)]);
+    return (
+      this.getNonLoadedResult() ??
+      AsyncData.loaded<U, E>([
+        this.internal.getRight().reduce<U>(callbackfn, initialValue),
+      ])
+    );
   }
 
   find(

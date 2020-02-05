@@ -1,6 +1,6 @@
 {
   "name": "@ahanapediatrics/ahana-fp",
-  "version": "1.3.0",
+  "version": "2.1.1",
   "description": "FP-friendly classes for Typescript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -13,6 +13,9 @@
     "release": "standard-version",
     "lint": "tslint -p tsconfig.json",
     "postversion": "git push && git push --tags",
+    "prettier:cli": "prettier \"src/**/*.ts\" \"src/**/*.tsx\"",
+    "prettier:check": "npm run prettier:cli -- -l",
+    "prettier:fix": "npm run prettier:cli -- --write",
     "prepare": "npm run build",
     "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
@@ -26,20 +29,22 @@
   "license": "MIT",
   "repository": "github:ohana-pediatrics/ahana-fp",
   "devDependencies": {
-    "@types/chai": "^4.2.5",
+    "@types/chai": "^4.2.8",
+    "@types/chai-as-promised": "^7.1.2",
     "@types/mocha": "^7.0.1",
     "@types/sinon": "^7.5.1",
     "@types/sinon-chai": "^3.2.3",
     "chai": "^4.2.0",
-    "cz-conventional-changelog": "^3.0.2",
-    "git-cz": "^3.3.0",
-    "mocha": "^6.2.2",
-    "nyc": "^14.1.1",
-    "sinon": "^7.5.0",
-    "sinon-chai": "^3.3.0",
-    "ts-node": "^8.5.4",
-    "tslint": "^5.20.1",
-    "typescript": "^3.7.2"
+    "chai-as-promised": "^7.1.1",
+    "cz-conventional-changelog": "^3.1.0",
+    "git-cz": "^4.3.1",
+    "mocha": "^7.0.1",
+    "nyc": "^15.0.0",
+    "sinon": "^8.1.1",
+    "sinon-chai": "^3.4.0",
+    "ts-node": "^8.6.2",
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5"
   },
   "files": [
     "lib/**/*"
@@ -50,7 +55,8 @@
     }
   },
   "dependencies": {
-    "standard-version": "^7.0.1"
+    "prettier": "^1.19.1",
+    "standard-version": "^7.1.0"
   },
   "nyc": {
     "include": [
