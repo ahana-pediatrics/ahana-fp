@@ -14,7 +14,7 @@
     "prerelease": "npm run prepare",
     "lint": "eslint -c .eslintrc.js --ext .ts src",
     "postversion": "git push && git push --tags",
-    "prettier:cli": "prettier \"src/**/*.ts\" \"src/**/*.tsx\"",
+    "prettier:cli": "prettier \"src/**/*.ts\"",
     "prettier:check": "npm run prettier:cli -- -l",
     "prettier:fix": "npm run prettier:cli -- --write",
     "prepare": "npm run build",

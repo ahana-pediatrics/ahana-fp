@@ -54,7 +54,6 @@ describe('AsyncData', () => {
       const ad = AsyncData.loading();
       expect(() => ad.value()).to.throw('Trying to access RemoteData before it is ready');
     });
-
     it('throws an error if data load failed', () => {
       const ad = AsyncData.errored(new Error('Testing error'));
       expect(() => ad.value()).to.throw('Testing error');
@@ -66,7 +65,6 @@ describe('AsyncData', () => {
       const ad = AsyncData.loaded([1]);
       expect(ad.singleValue()).to.equal(1);
     });
-
     it('throws an error if not single-valued', () => {
       const ad = AsyncData.loaded([1, 2]);
       expect(() => ad.singleValue()).to.throw('Data is not single-valued');
@@ -77,7 +75,6 @@ describe('AsyncData', () => {
         'Trying to access RemoteData before it is ready'
       );
     });
-
     it('throws an error if data load failed', () => {
       const ad = AsyncData.errored(new Error('Testing error'));
       expect(() => ad.singleValue()).to.throw('Testing error');
