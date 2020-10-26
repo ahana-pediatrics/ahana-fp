@@ -47,7 +47,7 @@ jobs:
       - run: cc-test-reporter before-build
       - run:
           name: Run tests
-          command: npm run test:coverage
+          command: npm run test
           when: always
       - run: cc-test-reporter after-build --exit-code $?
       - store_test_results:
