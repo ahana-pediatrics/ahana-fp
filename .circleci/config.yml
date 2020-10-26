@@ -1,0 +1,67 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.1.0
+  code-climate: travelaudience/code-climate@0.1.1
+
+executors:
+  build-executor:
+    environment:
+        NODE_OPTIONS: --max-old-space-size=2048
+    docker:
+      - image: circleci/node:latest
+
+jobs:
+  build-fe:
+    executor: build-executor
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm run build
+      - persist_to_workspace:
+            root: .
+            paths:
+                - "*"
+  run-linter:
+    executor: build-executor
+    environment:
+        NODE_ENV: test
+    steps:
+      - attach_workspace:
+          at: .
+      - run: 
+          name: Run linter
+          command: npm run lint:ci
+          when: always
+      - store_test_results:
+          path: ./reports
+      - store_artifacts:
+          path: ./reports    
+  test-fe:
+    executor: build-executor
+    environment:
+        NODE_ENV: test
+    steps:
+      - attach_workspace:
+          at: .
+      - code-climate/install
+      - run: cc-test-reporter before-build
+      - run:
+          name: Run tests
+          command: npm run test:coverage
+          when: always
+      - run: cc-test-reporter after-build --exit-code $?
+      - store_test_results:
+          path: ./reports
+      - store_artifacts:
+          path: ./reports    
+
+workflows:
+  package-build:
+    jobs:
+      - build-fe
+      - run-linter:
+          requires:
+            - build-fe
+      - test-fe:
+          requires:
+            - build-fe

@@ -13,6 +13,7 @@
     "release": "standard-version",
     "prerelease": "npm run prepare",
     "lint": "eslint -c .eslintrc.js --ext .ts src",
+    "lint:ci": "eslint -c .eslintrc.js --ext .ts --format junit --output-file ./reports/eslint.xml src",
     "postversion": "git push && git push --tags",
     "prettier:cli": "prettier \"src/**/*.ts\"",
     "prettier:check": "npm run prettier:cli -- -l",
