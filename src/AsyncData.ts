@@ -93,6 +93,15 @@ export class AsyncData<D, E = {}> {
   }
 
   /**
+   * Check whether data has been requested
+   *
+   * @param status
+   */
+  isAsked() {
+    return this.status !== RemoteDataStatus.NotAsked;
+  }
+
+  /**
    * Check whether any data has loaded (or that the request has failed)
    */
   isLoaded() {
@@ -131,6 +140,9 @@ export class AsyncData<D, E = {}> {
     if (this.status === RemoteDataStatus.Success) {
       return this.internal.getRight();
     }
+    if (this.status === RemoteDataStatus.Failure) {
+      throw this.internal.getLeft();
+    }
 
     throw new Error('Trying to access RemoteData before it is ready');
   }
@@ -139,14 +151,11 @@ export class AsyncData<D, E = {}> {
    *
    */
   singleValue(): D {
-    if (this.status === RemoteDataStatus.Success) {
-      if (this.internal.getRight().length !== 1) {
-        throw new Error('Data is not single-valued');
-      }
-      return this.internal.getRight()[0];
+    const val = this.value();
+    if (val.length !== 1) {
+      throw new Error('Data is not single-valued');
     }
-
-    throw new Error('Trying to access RemoteData before it is ready');
+    return val[0];
   }
 
   /**

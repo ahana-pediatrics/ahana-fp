@@ -8,17 +8,17 @@ describe('AsyncData', () => {
   });
   it('can map data', () => {
     const data = AsyncData.loaded([1, 2, 3, 4]);
-    expect(data.map(x => 2 * x).value()).to.deep.equal([2, 4, 6, 8]);
+    expect(data.map((x) => 2 * x).value()).to.deep.equal([2, 4, 6, 8]);
   });
   it('can filter data', () => {
     const data = AsyncData.loaded([1, 2, 3, 4]);
-    expect(data.filter(x => x % 2 === 0).value()).to.deep.equal([2, 4]);
+    expect(data.filter((x) => x % 2 === 0).value()).to.deep.equal([2, 4]);
   });
   it('can reduce data', () => {
     const data = AsyncData.loaded([1, 2, 3, 4]);
     expect(data.reduce((a, x) => a + x, 0).value()).to.deep.equal([10]);
   });
-  describe('getOptional', () => {
+  describe('.getOptional', () => {
     it('can be converted to an empty Optional when no request has been made', async () => {
       const async = AsyncData.notAsked<{}>();
       expect(async.getOptional().isPresent()).to.be.false;
@@ -42,6 +42,45 @@ describe('AsyncData', () => {
     it('can be converted to an empty Optional if there is an error', async () => {
       const async = AsyncData.errored(new Error('Oh dear'));
       expect(async.getOptional().isPresent()).to.be.false;
+    });
+  });
+
+  describe('.value', () => {
+    it('returns the internal value if successfully loaded', () => {
+      const ad = AsyncData.loaded([1]);
+      expect(ad.value()).to.deep.equal([1]);
+    });
+    it('throws an error if data is not loaded', () => {
+      const ad = AsyncData.loading();
+      expect(() => ad.value()).to.throw('Trying to access RemoteData before it is ready');
+    });
+
+    it('throws an error if data load failed', () => {
+      const ad = AsyncData.errored(new Error('Testing error'));
+      expect(() => ad.value()).to.throw('Testing error');
+    });
+  });
+
+  describe('.singleValue', () => {
+    it('returns the internal value if successfully loaded', () => {
+      const ad = AsyncData.loaded([1]);
+      expect(ad.singleValue()).to.equal(1);
+    });
+
+    it('throws an error if not single-valued', () => {
+      const ad = AsyncData.loaded([1, 2]);
+      expect(() => ad.singleValue()).to.throw('Data is not single-valued');
+    });
+    it('throws an error if data is not loaded', () => {
+      const ad = AsyncData.loading();
+      expect(() => ad.singleValue()).to.throw(
+        'Trying to access RemoteData before it is ready'
+      );
+    });
+
+    it('throws an error if data load failed', () => {
+      const ad = AsyncData.errored(new Error('Testing error'));
+      expect(() => ad.singleValue()).to.throw('Testing error');
     });
   });
 });
