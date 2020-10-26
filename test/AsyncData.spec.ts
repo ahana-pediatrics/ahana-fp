@@ -78,6 +78,18 @@ describe('AsyncData', () => {
     it('throws an error if data load failed', () => {
       const ad = AsyncData.errored(new Error('Testing error'));
       expect(() => ad.singleValue()).to.throw('Testing error');
+  describe('.orElse', () => {
+    it('returns the internal value as a single value if there is one', () => {
+      expect(AsyncData.loaded([1]).orElse(3)).to.deep.equal(1);
+    });
+    it('returns the internal value as an array if there is one', () => {
+      expect(AsyncData.loaded([1, 2]).orElse([3, 4])).to.deep.equal([1, 2]);
+    });
+    it('returns the default value if there is no internal value', () => {
+      expect(AsyncData.loading().orElse(3)).to.deep.equal(3);
+    });
+    it('returns the default array if there is no internal value', () => {
+      expect(AsyncData.loading().orElse([3, 4])).to.deep.equal([3, 4]);
     });
   });
 });

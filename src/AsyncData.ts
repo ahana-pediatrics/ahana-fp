@@ -159,22 +159,35 @@ export class AsyncData<D, E = {}> {
   }
 
   /**
-   *
+   * Get the data as an optional and treat it as a single value
    */
   getOptional(): Optional<D> {
-    return this.status === RemoteDataStatus.Failure
-      ? Optional.empty<D>()
-      : this.status === RemoteDataStatus.Success
-      ? Optional.of(this.internal.getRight()[0])
-      : Optional.empty<D>();
+    return this.getAllOptional().map((a) => a[0]);
   }
 
+  /**
+   * Get the data as an optional and treat it as an array
+   */
   getAllOptional(): Optional<readonly D[]> {
-    return this.status === RemoteDataStatus.Failure
-      ? Optional.empty<D[]>()
-      : this.status === RemoteDataStatus.Success
+    return this.status === RemoteDataStatus.Success
       ? Optional.of(this.internal.getRight())
       : Optional.empty<D[]>();
+  }
+
+  private isArray(v: D | readonly D[]): v is readonly D[] {
+    return Array.isArray(v);
+  }
+  /**
+   * Treats the data as an Optional and returns the internal
+   * value or the provided value.
+   *
+   * @param v
+   */
+  orElse(v: D | readonly D[]): typeof v {
+    if (this.isArray(v)) {
+      return this.getAllOptional().orElse(v);
+    }
+    return this.getOptional().orElse(v);
   }
 
   /**
