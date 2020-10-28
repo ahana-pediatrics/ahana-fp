@@ -135,6 +135,7 @@ describe('Optional', () => {
     type Opt = {
       a: number;
       b: string;
+      c?: string;
     };
     const getOptional = (): Optional<Opt> =>
       Optional.of({
@@ -145,12 +146,14 @@ describe('Optional', () => {
       expect(getOptional().property('a')).to.equal(1);
       expect(getOptional().property('b')).to.equal('bee');
     });
-    it('returns undefined', () => {
+    it('returns undefined if no default provided', () => {
       expect(Optional.empty<Opt>().property('a')).to.be.undefined;
     });
-
-    it('returns the default value', () => {
+    it('returns the default value for an empty', () => {
       expect(Optional.empty<Opt>().property('a', 9)).to.equal(9);
+    });
+    it('returns the default value for an undefined', () => {
+      expect(Optional.of(getOptional()).property('c', 'test')).to.equal('test');
     });
   });
 });
