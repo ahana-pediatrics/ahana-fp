@@ -228,8 +228,11 @@ export class Optional<T> {
    * @param orElse a default value
    */
   property<K extends keyof T>(key: K): T[K] | undefined;
-  property<K extends keyof T>(key: K, orElse: T[K]): T[K];
-  property<K extends keyof T>(key: K, orElse?: T[K]): T[K] | undefined {
+  property<K extends keyof T>(key: K, orElse: NonNullable<T[K]>): NonNullable<T[K]>;
+  property<K extends keyof T>(
+    key: K,
+    orElse?: NonNullable<T[K]>
+  ): T[K] | NonNullable<T[K]> | undefined {
     const value = this.map((u) => u[key]);
     if (orElse) {
       return value.orElse(orElse);
