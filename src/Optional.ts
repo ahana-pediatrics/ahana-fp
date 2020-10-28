@@ -234,7 +234,7 @@ export class Optional<T> {
     orElse?: NonNullable<T[K]>
   ): T[K] | NonNullable<T[K]> | undefined {
     const value = this.map((u) => u[key]);
-    if (orElse) {
+    if (typeof orElse !== 'undefined') {
       return value.orElse(orElse);
     }
     return value.orNothing();

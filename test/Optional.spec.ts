@@ -154,6 +154,9 @@ describe('Optional', () => {
     });
     it('returns the default value for an undefined', () => {
       expect(Optional.of(getOptional()).property('c', 'test')).to.equal('test');
+      expect(Optional.of<Opt>(undefined).property('c', '')).to.equal('');
     });
+
+    it('handles the Ahana use case', () => {});
   });
 });
